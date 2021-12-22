@@ -18,7 +18,7 @@ public class Ball extends Thread {
     private int ballSpeed;
     private int ballSpeedBoost;
     private final Circle engineInstance;
-    private static int currentPlace = 1;
+    private static int currentPlace = UtilMeasures.STEP.getMeasure();
     private int ownPlace;
 
     @SneakyThrows

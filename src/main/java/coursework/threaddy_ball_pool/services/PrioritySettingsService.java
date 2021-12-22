@@ -1,6 +1,7 @@
 package coursework.threaddy_ball_pool.services;
 
 import coursework.threaddy_ball_pool.models.Ball;
+import coursework.threaddy_ball_pool.models.enums.JavaFXConfigValues;
 import coursework.threaddy_ball_pool.models.enums.UtilMeasures;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -43,7 +44,10 @@ public class PrioritySettingsService {
     public static void hideAllPrioritySettings() {
         priorityScale.values().stream()
                 .filter(Node::isVisible)
-                .forEach(vBox -> vBox.setVisible(false));
+                .forEach(PrioritySettingsService::hideVBox);
+    }
+    public static void hideVBox(VBox vBox){
+        vBox.setVisible(false);
     }
     public static VBox createSliderAreaFor(Ball ball) {
         Label sign = createSign(ball.getBallNumber());
@@ -82,8 +86,8 @@ public class PrioritySettingsService {
         slider.showTickLabelsProperty().set(false);
         slider.showTickMarksProperty().set(false);
         slider.snapToTicksProperty().set(true);
-        slider.setMajorTickUnit(1.0);
-        slider.setMinorTickCount(0);
+        slider.setMajorTickUnit(JavaFXConfigValues.MAJOR_TICK_UNIT.getValue());
+        slider.setMinorTickCount((int) JavaFXConfigValues.MINOR_TICK_COUNT.getValue());
         StageCreationService.setHandCursor(slider);
         EventService.setEventForSlider(slider);
 

@@ -38,9 +38,14 @@ public class MainController implements Initializable {
 
     private ExecutorService executorService;
     private static CyclicBarrier barrier;
+    private final GUITableElementsManager manager;
 
     public static CyclicBarrier getBarrier() {
         return barrier;
+    }
+
+    public MainController() {
+        this.manager = new GUITableElementsManager();
     }
 
     @Override
@@ -48,8 +53,8 @@ public class MainController implements Initializable {
         ballPoolArea.getChildren().add(new Group());
         PlaceService.setPlacesInstance(placesBox);
         IntStream.range(1, 4).forEach(ballNumber -> {
-            Ball ball = BallsService.createNewBall(ballNumber, 1);
-            ballPoolArea.getChildren().add(ballPoolArea.getChildren().size() - 2, PrioritySettingsService.getPriorityScale(ball));
+            Ball ball = BallsService.createNewBall(ballNumber, UtilMeasures.MIN_SPEED.getMeasure());
+            ballPoolArea.getChildren().add(manager.getIndexToInsertPriorityScale(), PrioritySettingsService.getPriorityScale(ball));
             BallsService.addBall(ball);
 
             FXCollections.synchronizedObservableList(getBalls()).add(ball.getEngineInstance());
@@ -75,20 +80,23 @@ public class MainController implements Initializable {
     }
 
     private void addBallAndPriorityScaleOnScene(Ball ball) {
-        ballPoolArea.getChildren().add(ballPoolArea.getChildren().size() - 2, PrioritySettingsService.getPriorityScale(ball));
+        ballPoolArea.getChildren().add(manager.getIndexToInsertPriorityScale(), PrioritySettingsService.getPriorityScale(ball));
         FXCollections.synchronizedObservableList(getBalls()).add(ball.getEngineInstance());
     }
+
     private void removeBallAndPriorityScaleOnScene(int ballNumber){
-        ballPoolArea.getChildren().remove(ballPoolArea.getChildren().size() - 3);
-        FXCollections.synchronizedObservableList(getBalls()).remove(getBalls().size() - 1);
+        ballPoolArea.getChildren().remove(manager.getIndexOfPriorityScale());
+        FXCollections.synchronizedObservableList(getBalls()).remove(manager.getLastBallIndex());
         PrioritySettingsService.updatePriorityScale(ballNumber);
     }
 
+
     private ObservableList<Node> getBalls(){
         return ((Group) ballPoolArea.getChildren()
-                .get(ballPoolArea.getChildren().size() - 1))
+                .get(manager.getBallsSetIndex()))
                 .getChildren();
     }
+
 
     public void startBallsRolling(MouseEvent mouseEvent) {
         barrier = new CyclicBarrier(BallsService.getAllBalls().size(), () -> Platform.runLater(PlaceService::givePlaces));
@@ -147,5 +155,21 @@ public class MainController implements Initializable {
                     int ballPriority = ball.getPriority();
                     System.out.printf("Ball #%d with priority - %d%n", ballNum, ballPriority);
                 });
+    }
+
+    private class GUITableElementsManager {
+
+        private int getIndexToInsertPriorityScale() {
+            return ballPoolArea.getChildren().size() - 2;
+        }
+        private int getIndexOfPriorityScale() {
+            return ballPoolArea.getChildren().size() - 3;
+        }
+        private int getLastBallIndex() {
+            return getBalls().size() - 1;
+        }
+        private int getBallsSetIndex() {
+            return ballPoolArea.getChildren().size() - 1;
+        }
     }
 }
