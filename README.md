@@ -1,2 +1,3 @@
 # Enjoy watching short application usage demonstration :))
-![app-demo](https://user-images.githubusercontent.com/45817745/149012289-470c3de5-cb56-4515-b37f-945758488551.gif)
+
+![app-demo](https://user-images.githubusercontent.com/45817745/149013693-d51a5c7b-7cf8-4b84-a639-3384c8c75bad.gif)
