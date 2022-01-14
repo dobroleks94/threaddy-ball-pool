@@ -39,7 +39,7 @@ public class PrioritySettingsService {
                 .filter(entry -> BallsService.getByNumber(entry.getKey()).getBallNumber() != ball.getBallNumber())
                 .map(Map.Entry::getValue)
                 .filter(Node::isVisible)
-                .forEach(vBox -> vBox.setVisible(false));
+                .forEach(PrioritySettingsService::hideVBox);
     }
     public static void hideAllPrioritySettings() {
         priorityScale.values().stream()
